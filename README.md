@@ -8,7 +8,7 @@ As i said before this shit uses tkinter as a frontend so if you want to use it y
 ## Stuff i want to add later
  - [x] working score counter
  - [x] working score growth counter
- - [x] working way to manipulate the growth
+ - [x] working way to manipulate the growth (upgrading system)
  - [ ] fleshed out upgrading system
  - [ ] prestige
  - [ ] mtx
