@@ -1,30 +1,55 @@
-import tkinter
+import tkinter as tk
 import time
 import math
 
 score = 1
-totalMult = 1
+mult = 0
+
+def addValue():
+    global score
+    score += 0.01 * (1 + mult)
+    
+def multiplier():
+    global mult
+    mult += 0.25
 
 def showValue():
     global score
-    score += 0.01 * multiplier()
-    label['text'] = round(score, 2)
+    addValue()
+    shownScore = score
+    lblScore['text'] = round(shownScore, 2)
     window.after(100, showValue)
     
-def multiplier():
-    global totalMult
-    totalMult += 1
-    return (totalMult)
+def showgGrowth():
+    global mult
+    shownGrowth = str(round(0.01 * (1 + mult), 2))
+    lblGrowth['text'] = f'{shownGrowth}/s'
+    window.after(1, showgGrowth)
+    
+def showMult():
+    global mult
+    shownMult = f'{int(mult*100)}%'
+    lblMult['text'] = shownMult
+    window.after(1, showMult)
+    
 
-window = tkinter.Tk()
-window.title("Welcome To This Fucking Cumstain of a Programming Project")
+window = tk.Tk()
+window.title('CIA Black Project')
 window.minsize(800, 600)
 
-label = tkinter.Label(window, text="", font=('Helvetica', 30))
-label.pack(anchor="w", padx = 20, pady = 20)
+lblScore = tk.Label(window, text='', font=('Helvetica', 30))
+lblScore.grid(row=0, column=0, padx = 10, pady = 10, sticky='w')
 
-button = tkinter.Button(window, text="Click Me", command=multiplier)
-button.pack()
+lblGrowth = tk.Label(window, text='', font=('Helvetica', 12))
+lblGrowth.grid(row=1, column=0, padx = 10, pady = 0, sticky='w')
+
+btnMult = tk.Button(window, text='Pound me dady UwU', command=multiplier, font=('Helvetica', 9))
+btnMult.grid(row=2, column=0, padx=10, pady=10)
+
+lblMult = tk.Label(window, text='', font=('Helvetica', 12))
+lblMult.grid(row=2, column=2, padx=10, pady=10, sticky='w')
     
 showValue()
+showMult()
+showgGrowth()
 window.mainloop()
