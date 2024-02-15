@@ -5,7 +5,7 @@ So one day i was bored and shit and the idea came to me in a dream. Js sucks, we
 ## How to run
 As i said before this shit uses tkinter as a frontend so if you want to use it you need to install python and tkinter first. then just run the game.py
 
-## Shits i want to add later
+## Stuff i want to add later
  - [x] working score counter
  - [x] working score growth counter
  - [x] working way to manipulate the growth
