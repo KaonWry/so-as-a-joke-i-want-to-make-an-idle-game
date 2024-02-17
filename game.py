@@ -3,16 +3,23 @@ import math
 
 score = 0
 mult = 1
-upg = [0]
+
+class Upgrade:
+    def __init__(self, a, b, c, upgrade_mult):
+        self.a = a
+        self.b = b
+        self.c = c
+        self.upgrade_mult = upgrade_mult
+        self.level = 0
+        
+upgrade1 = Upgrade(1.2, 2.3, 2, 1)
 
 # Reusable
-def logFunc(a, b, c, upgradeType):
-    global upg
-    return a * math.log(upg[upgradeType - 1], b) + c
+def logFunc(upgrade):
+    return upgrade.a * math.log(upgrade.level, upgrade.b) + upgrade.c
 
-def expFunc(a, b, c, upgradeType):
-    global upg
-    return (a * math.pow(upg[upgradeType - 1], b) + c)
+def expFunc(upgrade):
+    return upgrade.a * math.pow(upgrade.level, upgrade.b) + upgrade.c
 
 def changeState(a):
     if a['state'] == 'normal':
@@ -24,52 +31,49 @@ def changeState(a):
 def addScore():
     global score
     score += 0.01 * (1 + mult)
-    
+
 def showValue():
     global score
     addScore()
     shownScore.set(round(score, 2))
     window.after(10, showValue)
-    
+
 def showGrowth():
     global mult
-    shownGrowth.set(f'{round(0.01 * (mult)*100, 2)}/s')
+    shownGrowth.set(f'{round(0.01 * (mult) * 100, 2)}/s')
     window.after(1, showGrowth)
     
 # Called each button click
-def minScore(a, b, c, upgradeType):
+def minScore(upgrade):
     global score
-    cost = expFunc(a, b, c, upgradeType)
+    cost = expFunc(upgrade)
     score = score - cost
-    
-def addMult(upgradeType, upgradeMult):
+
+def addMult(upgrade):
     global mult
-    global upg
-    mult += upgradeMult
-    upg[upgradeType - 1] += 1
-    if upg[upgradeType - 1] == 1:
-        upg.append(0)
-        
-def upgButtonClick(a, b, c, upgradeType, upgradeMult):
-    minScore(a, b, c, upgradeType)
-    addMult(upgradeType, upgradeMult)
+    upgrade.level += 1
+    mult += upgrade.upgrade_mult
+
+def upgButtonClick(upgrade):
+    minScore(upgrade)
+    addMult(upgrade)
 
 # Called every ms
-def upgradeCost(a, b, c, upgradeType, upgradeVar):
-    upgradeVar.set(round(expFunc(a, b, c, upgradeType), 2))
-    
-def checkUpgradeCost(a, b, c, upgradeType, button):
+def upgradeCost(upgrade, upgradeVar):
+    upgradeVar.set(round(expFunc(upgrade), 2))
+
+def checkUpgradeCost(upgrade, button):
     global score
-    cost = expFunc(a, b, c, upgradeType)
+    cost = expFunc(upgrade)
     if score <= cost:
         button.config(state='disable')
     else:
         button.config(state='normal')
-    
-def checkButton(a, b, c, upgradeType, button, upgradeVar):
-    upgradeCost(a, b, c, upgradeType, upgradeVar)
-    checkUpgradeCost(a, b, c, upgradeType, button)
-    window.after(10, lambda: checkButton(a, b, c, upgradeType, button, upgradeVar))
+
+def checkButton(upgrade, button, upgradeVar):
+    upgradeCost(upgrade, upgradeVar)
+    checkUpgradeCost(upgrade, button)
+    window.after(10, lambda: checkButton(upgrade, button, upgradeVar))
 
 # Debugging
 def boostValue():
@@ -94,9 +98,9 @@ lblGrowth = tk.Label(window, textvariable=shownGrowth, font=('Helvetica', 12))
 lblGrowth.grid(row=1, column=0, padx = 10, sticky='w')
 
 # Upgrade 1
-btnUpgrade1 = tk.Button(window, textvariable=upgr1Cost, font=('Helvetica', 16), command=lambda: upgButtonClick(1.5, 2.5, 2, 1, 1))
+btnUpgrade1 = tk.Button(window, textvariable=upgr1Cost, font=('Helvetica', 16), command=lambda: upgButtonClick(upgrade1))
 btnUpgrade1.grid(row=2, column=0, padx= 10, sticky='w')
-checkButton(1.5, 2.5, 2, 1, btnUpgrade1, upgr1Cost)
+checkButton(upgrade1, btnUpgrade1, upgr1Cost)
 
 lblUpgrade1 = tk.Label(window, textvariable=upgr1Mult, font=('Helvetica', 16))
 lblUpgrade1.grid(row=2, column=1, padx= 10, sticky='w')
