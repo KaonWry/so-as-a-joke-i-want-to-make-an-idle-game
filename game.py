@@ -4,6 +4,7 @@ import math
 score = 0
 mult = 1
 
+# Define class
 class Upgrade:
     def __init__(self, a, b, c, upgrade_mult):
         self.a = a
@@ -12,6 +13,7 @@ class Upgrade:
         self.upgrade_mult = upgrade_mult
         self.level = 0
         
+# Classes 
 upgrade1 = Upgrade(1.2, 2.3, 2, 1)
 
 # Reusable
@@ -59,8 +61,8 @@ def upgButtonClick(upgrade):
     addMult(upgrade)
 
 # Called every ms
-def upgradeCost(upgrade, upgradeVar):
-    upgradeVar.set(round(expFunc(upgrade), 2))
+def upgradeCost(upgrade, var):
+    var.set(round(expFunc(upgrade), 2))
 
 def checkUpgradeCost(upgrade, button):
     global score
@@ -69,11 +71,16 @@ def checkUpgradeCost(upgrade, button):
         button.config(state='disable')
     else:
         button.config(state='normal')
+        
+def showMult(upgrade, var):
+    mult = upgrade.level * upgrade.upgrade_mult
+    var.set(f'{mult + 1}x')
 
-def checkButton(upgrade, button, upgradeVar):
-    upgradeCost(upgrade, upgradeVar)
+def checkButton(upgrade, button, varCost, varMult):
+    upgradeCost(upgrade, varCost)
     checkUpgradeCost(upgrade, button)
-    window.after(10, lambda: checkButton(upgrade, button, upgradeVar))
+    showMult(upgrade, varMult)
+    window.after(10, lambda: checkButton(upgrade, button, varCost, varMult))
 
 # Debugging
 def boostValue():
@@ -100,10 +107,11 @@ lblGrowth.grid(row=1, column=0, padx = 10, sticky='w')
 # Upgrade 1
 btnUpgrade1 = tk.Button(window, textvariable=upgr1Cost, font=('Helvetica', 16), command=lambda: upgButtonClick(upgrade1))
 btnUpgrade1.grid(row=2, column=0, padx= 10, sticky='w')
-checkButton(upgrade1, btnUpgrade1, upgr1Cost)
 
 lblUpgrade1 = tk.Label(window, textvariable=upgr1Mult, font=('Helvetica', 16))
 lblUpgrade1.grid(row=2, column=1, padx= 10, sticky='w')
+
+checkButton(upgrade1, btnUpgrade1, upgr1Cost, upgr1Mult)
 
 # Debugging Stuffs
 btnBoostValue = tk.Button(window, text='add value', font=('Helvetica', 12), command=boostValue, state="normal")
