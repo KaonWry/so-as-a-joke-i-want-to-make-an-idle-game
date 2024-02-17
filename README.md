@@ -9,7 +9,7 @@ As i said before this shit uses tkinter as a frontend so if you want to use it y
  - [x] working score counter
  - [x] working score growth counter
  - [x] working way to manipulate the growth
- - [x] fleshed out upgrading system (some issues, will fix later)
+ - [x] fleshed out upgrading system
  - [ ] prestige
  - [ ] mtx
  - [ ] mobile game ads

@@ -37,6 +37,11 @@ def showGrowth():
     window.after(1, showGrowth)
     
 # Called each button click
+def minScore(a, b, c, upgradeType):
+    global score
+    cost = expFunc(a, b, c, upgradeType)
+    score = score - cost
+    
 def addMult(upgradeType, upgradeMult):
     global mult
     global upg
@@ -45,11 +50,6 @@ def addMult(upgradeType, upgradeMult):
     if upg[upgradeType - 1] == 1:
         upg.append(0)
         
-def minScore(a, b, c, upgradeType):
-    global score
-    cost = expFunc(a, b, c, upgradeType)
-    score = score - cost
-
 def upgButtonClick(a, b, c, upgradeType, upgradeMult):
     minScore(a, b, c, upgradeType)
     addMult(upgradeType, upgradeMult)
