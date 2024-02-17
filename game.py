@@ -23,17 +23,17 @@ def changeState(a):
 # Score
 def addScore():
     global score
-    score += 1 * (1 + mult)
+    score += 0.01 * (1 + mult)
     
 def showValue():
     global score
     addScore()
-    shownScore.set(score)
-    window.after(1000, showValue)
+    shownScore.set(round(score, 2))
+    window.after(10, showValue)
     
 def showGrowth():
     global mult
-    shownGrowth.set(f'{0.01 * (mult)*100}/s')
+    shownGrowth.set(f'{round(0.01 * (mult)*100, 2)}/s')
     window.after(1, showGrowth)
     
 # Called each button click
@@ -48,19 +48,15 @@ def addMult(upgradeType, upgradeMult):
 def minScore(a, b, c, upgradeType):
     global score
     cost = expFunc(a, b, c, upgradeType)
-    print (f'cost = {cost}')
-    print (f'score before = {score}')
     score = score - cost
-    print (f'score after = {score}')
 
-def upgButtonClick(upgradeType, upgradeMult, a, b, c):
-    addMult(upgradeType, upgradeMult)
+def upgButtonClick(a, b, c, upgradeType, upgradeMult):
     minScore(a, b, c, upgradeType)
+    addMult(upgradeType, upgradeMult)
 
 # Called every ms
-def upgradeCost(upgrVar, a, b, c, upgradeType):
-    show = expFunc(a, b, c, upgradeType)
-    upgrVar.set(show)
+def upgradeCost(a, b, c, upgradeType, upgradeVar):
+    upgradeVar.set(round(expFunc(a, b, c, upgradeType), 2))
     
 def checkUpgradeCost(a, b, c, upgradeType, button):
     global score
@@ -70,10 +66,10 @@ def checkUpgradeCost(a, b, c, upgradeType, button):
     else:
         button.config(state='normal')
     
-def checkButton(a, b, c, upgradeType, button, upgrVar):
-    upgradeCost(upgrVar, a, b, c, upgradeType)
+def checkButton(a, b, c, upgradeType, button, upgradeVar):
+    upgradeCost(a, b, c, upgradeType, upgradeVar)
     checkUpgradeCost(a, b, c, upgradeType, button)
-    window.after(10, lambda: checkButton(a, b, c, upgradeType, button, upgrVar))
+    window.after(10, lambda: checkButton(a, b, c, upgradeType, button, upgradeVar))
 
 # Debugging
 def boostValue():
@@ -97,9 +93,8 @@ lblScore.grid(row=0, column=0, columnspan=5, padx = 10, pady = 10, sticky='w')
 lblGrowth = tk.Label(window, textvariable=shownGrowth, font=('Helvetica', 12))
 lblGrowth.grid(row=1, column=0, padx = 10, sticky='w')
 
-
 # Upgrade 1
-btnUpgrade1 = tk.Button(window, textvariable=upgr1Cost, font=('Helvetica', 16), command=lambda: upgButtonClick(1, 1, 1.7, 2.7, 2))
+btnUpgrade1 = tk.Button(window, textvariable=upgr1Cost, font=('Helvetica', 16), command=lambda: upgButtonClick(1.5, 2.5, 2, 1, 1))
 btnUpgrade1.grid(row=2, column=0, padx= 10, sticky='w')
 checkButton(1.5, 2.5, 2, 1, btnUpgrade1, upgr1Cost)
 
@@ -115,7 +110,6 @@ btnChangeState.grid(row=99, column=1, padx=10, pady=10, sticky='w')
     
 sclAddValue = tk.Scale(window, from_=0, to=1000, orient=tk.HORIZONTAL)
 sclAddValue.grid(row=99, column=2, pady=10)
-
 
 # Start App    
 showValue()
