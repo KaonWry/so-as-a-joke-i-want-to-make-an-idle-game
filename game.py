@@ -14,10 +14,16 @@ class Upgrade:
         self.c = c
         self.upgrade_mult = upgrade_mult
         self.level = 1
-        
-# Classes 
-upgrade1 = Upgrade(1.2, 2.3, 2, 1)
-upgrade2 = Upgrade(1.3, 2.5, 10, 3)
+
+# List of upgrades
+# Format: a, b, c, multiplier
+upgrades = [
+    Upgrade(1.2, 2.3, 2, 1),
+    Upgrade(1.5, 2.5, 10, 3),
+    Upgrade(2, 3.3, 50, 7),
+    Upgrade(2.5, 4.3, 100, 9),
+    # Add more upgrades as needed 
+]
 
 # Reusable
 def logFunc(upgrade):
@@ -64,7 +70,7 @@ def addMult(upgrade):
     upgrade.level += 1
     mult += upgrade.upgrade_mult * upgrade.level
 
-def upgButtonClick(upgrade):
+def handleUpgrade(upgrade):
     minScore(upgrade)
     addMult(upgrade)
 
@@ -93,7 +99,17 @@ def checkButton(upgrade, button, varCost, varMult):
 def boostValue():
     global score
     score += sclAddValue.get()
+    
+# Upgrade Button
+def createUpgradeButton(row, upgrade, varCost, varMult):
+    btnUpgrade = tk.Button(window, textvariable=varCost, font=('Helvetica', 14), command=lambda: handleUpgrade(upgrade))
+    btnUpgrade.grid(row=row, column=0, padx=10, pady=2, sticky='w')
 
+    lblUpgrade = tk.Label(window, textvariable=varMult, font=('Helvetica', 14))
+    lblUpgrade.grid(row=row, column=1, padx=10, pady=2, columnspan=99, sticky='w')
+
+    checkButton(upgrade, btnUpgrade, varCost, varMult)
+    
 # Window Management
 window = tk.Tk()
 window.title('CIA Black Project')
@@ -102,10 +118,6 @@ window.minsize(800, 600)
 # Text Display
 shownScore = tk.StringVar()
 shownGrowth = tk.StringVar()
-upgr1Cost = tk.StringVar()
-upgr1Mult = tk.StringVar()
-upgr2Cost = tk.StringVar()
-upgr2Mult = tk.StringVar()
 
 lblScore = tk.Label(window, textvariable=shownScore, font=('Helvetica', 30))
 lblScore.grid(row=0, column=0, columnspan=99, padx = 10, pady = 10, sticky='w')
@@ -113,23 +125,11 @@ lblScore.grid(row=0, column=0, columnspan=99, padx = 10, pady = 10, sticky='w')
 lblGrowth = tk.Label(window, textvariable=shownGrowth, font=('Helvetica', 12))
 lblGrowth.grid(row=1, column=0, padx = 10, sticky='w')
 
-# Upgrade 1
-btnUpgrade1 = tk.Button(window, textvariable=upgr1Cost, font=('Helvetica', 16), command=lambda: upgButtonClick(upgrade1))
-btnUpgrade1.grid(row=2, column=0, padx= 10, sticky='w')
-
-lblUpgrade1 = tk.Label(window, textvariable=upgr1Mult, font=('Helvetica', 16))
-lblUpgrade1.grid(row=2, column=1, padx= 10, columnspan=99, sticky='w')
-
-checkButton(upgrade1, btnUpgrade1, upgr1Cost, upgr1Mult)
-
-# Upgrade 2
-btnUpgrade2 = tk.Button(window, textvariable=upgr2Cost, font=('Helvetica', 16), command=lambda: upgButtonClick(upgrade2))
-btnUpgrade2.grid(row=3, column=0, padx= 10, sticky='w')
-
-lblUpgrade2 = tk.Label(window, textvariable=upgr2Mult, font=('Helvetica', 16))
-lblUpgrade2.grid(row=3, column=1, padx= 10, columnspan=99, sticky='w')
-
-checkButton(upgrade2, btnUpgrade2, upgr2Cost, upgr2Mult)
+# Create upgrade buttons in a loop
+for i, upgrade in enumerate(upgrades, start=2):  # Starting from row 2
+    varCost = tk.StringVar()
+    varMult = tk.StringVar()
+    createUpgradeButton(i, upgrade, varCost, varMult)
 
 # Debugging Stuffs
 btnBoostValue = tk.Button(window, text='add value', font=('Helvetica', 12), command=boostValue, state="normal")
